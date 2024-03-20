@@ -61,12 +61,10 @@ void write_struct(FILE *fp, Applicant str) {
     fwrite(avgGrade.c_str(), avgGrade.length(), 1, fp);
     fwrite("\n", 1, 1, fp);
 
-    //fwrite(&str, sizeof(Applicant), 1, fp);
-
     delete[] scores;
 }
 
-void cpp_write_struct(std::fstream &fp, Applicant str) {
+void write_struct(std::fstream &fp, Applicant str) {
     fp << str.firstName << ";";
     fp << str.lastName << ";";
     fp << str.middleName << ";";
@@ -124,7 +122,7 @@ bool read_struct(FILE *fp, Applicant &app) {
     return valid;
 }
 
-bool cpp_read_struct(std::fstream &fp, Applicant &app) {
+bool read_struct(std::fstream &fp, Applicant &app) {
     std::string line;
     if(!std::getline(fp, line))
         return false;
@@ -252,7 +250,7 @@ void cpp_write_structs() {
     int n = readInt("1. Enter structs count: ");
 
     for (int i = 0; i < n; i++)
-        cpp_write_struct(fp, make_applicant());
+        write_struct(fp, make_applicant());
 
     fp.close();
 }
@@ -264,10 +262,10 @@ void cpp_remove_struct() {
     std::fstream fp_t("structs_temp.txt", std::ios::out);
 
     Applicant a;
-    for (int i = 0; cpp_read_struct(fp, a); i++) {
+    for (int i = 0; read_struct(fp, a); i++) {
         if (i == n)
             continue;
-        cpp_write_struct(fp_t, a);
+        write_struct(fp_t, a);
     }
 
     fp.close();
@@ -283,11 +281,11 @@ void cpp_add_structs() {
     std::fstream fp_t("structs_temp.txt", std::ios::out);
 
     for (int i = 0; i < k; i++)
-        cpp_write_struct(fp_t, make_applicant());
+        write_struct(fp_t, make_applicant());
 
     Applicant a;
-    while (cpp_read_struct(fp, a))
-        cpp_write_struct(fp_t, a);
+    while (read_struct(fp, a))
+        write_struct(fp_t, a);
 
     fp.close();
     fp_t.close();
@@ -299,7 +297,7 @@ void cpp_print_structs() {
     std::fstream fp("structs.txt", std::ios::in);
 
     Applicant a;
-    while (cpp_read_struct(fp, a))
+    while (read_struct(fp, a))
         printf(
             "First name: %s, Last name: %s, Middle name: %s, Birth year: %d, Exam scores: %d %d %d, Average grade: %d\n",
             a.firstName, a.lastName, a.middleName, a.birthYear, a.examScores[0], a.examScores[1], a.examScores[2],
